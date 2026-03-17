@@ -38,6 +38,10 @@ https://github.com/apache/ofbiz-framework
 
 Click **Fork** in the top-right corner of the page.
 
+If you want to work with the ofbiz-plugins that are included in OFBiz releases, repeat the same step for:
+
+https://github.com/apache/ofbiz-plugins
+
 ### 2. Clone Your Fork
 
 Clone your fork locally:
@@ -51,6 +55,18 @@ Optionally add the upstream repository:
 
 ```bash
 git remote add upstream https://github.com/apache/ofbiz-framework.git
+```
+
+If you have forked the ofbiz-plugins repository, you can clone it directly in a `plugins` folder inside of the `ofbiz-framework` folder:
+```bash
+git clone https://github.com/YOUR_GITHUB_USERNAME/ofbiz-plugins.git plugins
+```
+
+Optionally add the upstream repository:
+
+```bash
+cd plugins
+git remote add upstream https://github.com/apache/ofbiz-plugins.git
 ```
 
 ### 3. Create a Branch
@@ -77,16 +93,23 @@ Please try to:
 
 ### 5. Commit Your Changes
 
-Write clear and descriptive commit messages.
+Write clear and descriptive commit messages so reviewers can easily understand the intent of a change and the project history remains easy to navigate.
+
+Use a short title line that summarizes the change. Write it in the imperative mood (for example: "Fix bug", "Add feature", "Improve validation"), keep it concise (around 50–72 characters), and do not end it with a period. Focus on what the commit does rather than how it was implemented.
+
+If additional context is needed, leave a blank line after the title and add a short paragraph explaining the reason for the change, important implementation details, or possible side effects.
 
 Example:
 
 ```
 Fix rounding issue in order calculation
 
-- Correct rounding logic in OrderServices
-- Add test covering edge case
+The previous implementation could produce incorrect totals in edge
+cases due to double rounding. This change ensures rounding occurs
+only once at the final calculation stage.
 ```
+
+Issue or ticket numbers do not need to be included in commit messages; they can instead be referenced in the Pull Request description. Keep commits focused and avoid mixing unrelated changes.
 
 ### 6. Push Your Branch
 
