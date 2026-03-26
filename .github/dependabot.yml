@@ -24,8 +24,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-      time: "09:00"
-      timezone: "Europe/Rome"      
+#      time: "09:00"
+#      timezone: "Europe/Rome"      
 
     groups:
       all-dependencies:
