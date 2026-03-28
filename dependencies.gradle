@@ -36,13 +36,13 @@ dependencies {
     implementation 'javax.transaction:javax.transaction-api:1.3'
     implementation 'net.fortuna.ical4j:ical4j:1.0-rc4-atlassian-12'
     implementation 'net.lingala.zip4j:zip4j:2.11.6'
-    implementation 'org.activiti:activiti-juel-jakarta:8.1.0'
+    implementation 'org.activiti:activiti-juel-jakarta:8.8.0'
     implementation 'org.apache.ant:ant-junit:1.10.15'
     implementation 'org.apache.commons:commons-collections4:4.5.0'
     implementation 'org.apache.commons:commons-csv:1.14.1'
     implementation 'org.apache.commons:commons-dbcp2:2.14.0'
     implementation 'org.apache.commons:commons-fileupload2-jakarta:2.0.0-M1'
-    implementation 'org.apache.commons:commons-imaging:1.0-alpha3' // Alpha but OK, "Imaging was working and was used by a number of projects in production even before reaching its initial release as an Apache Commons component." Since 1.0.0-alpha4 (note the use of semver) the API has changed. Better wait an "official release" to rewrite OFBiz code...
+    implementation 'org.apache.commons:commons-imaging:1.0.0-alpha6' // Alpha but OK, "Imaging was working and was used by a number of projects in production even before reaching its initial release as an Apache Commons component." Since 1.0.0-alpha4 (note the use of semver) the API has changed. Better wait an "official release" to rewrite OFBiz code...
     implementation 'org.apache.commons:commons-text:1.15.0'
     implementation 'org.apache.geronimo.components:geronimo-transaction:3.1.5' // 4.0.0 does not compile
     implementation 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
@@ -96,8 +96,8 @@ dependencies {
     runtimeOnly 'org.apache.avalon.framework:avalon-framework-impl:4.3.1'
     runtimeOnly 'org.apache.axis2:axis2-transport-http:1.8.2'
     runtimeOnly 'org.apache.axis2:axis2-transport-local:1.8.2'
-    runtimeOnly 'org.apache.derby:derby:10.16.1.1' // 10.17.x.x requires Java 21
-    runtimeOnly 'org.apache.derby:derbytools:10.16.1.1' // 10.17.x.x requires Java 21
+    runtimeOnly 'org.apache.derby:derby:10.17.1.0' // 10.17.x.x requires Java 21
+    runtimeOnly 'org.apache.derby:derbytools:10.17.1.0' // 10.17.x.x requires Java 21
     runtimeOnly 'org.apache.geronimo.specs:geronimo-jaxrpc_1.1_spec:2.1'
     runtimeOnly 'org.apache.logging.log4j:log4j-1.2-api:2.25.3' // for external jars using the old log4j1.2: routes logging to log4j 2
     runtimeOnly 'org.apache.logging.log4j:log4j-jul:2.25.3' // for external jars using the java.util.logging: routes logging to log4j 2
