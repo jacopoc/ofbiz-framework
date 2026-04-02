@@ -26,10 +26,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    groups:
-      all-dependencies:
-        patterns:
-          - "*"
+    #groups:
+    #  all-dependencies:
+    #    patterns:
+    #      - "*"
     ignore:
       - dependency-name: "*"
         update-types:
@@ -40,10 +40,10 @@ updates:
     target-branch: "release24.09"
     schedule:
       interval: "daily"
-    groups:
-      all-dependencies:
-        patterns:
-          - "*"
+    #groups:
+    #  all-dependencies:
+    #    patterns:
+    #      - "*"
     ignore:
       - dependency-name: "*"
         update-types:
