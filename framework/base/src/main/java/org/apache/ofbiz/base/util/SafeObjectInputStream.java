@@ -40,6 +40,7 @@ public final class SafeObjectInputStream extends ObjectInputStream {
     private static final String[] DEFAULT_ALLOWLIST_PATTERN = {
             "byte\\[\\]",
             "\\[Z", "\\[B", "\\[S", "\\[I", "\\[J", "\\[F", "\\[D", "\\[C",
+            "\\[L.*",
             "java\\.lang\\.String",
             "java\\.lang\\.Number",
             "java\\.lang\\.Integer",
@@ -101,7 +102,7 @@ public final class SafeObjectInputStream extends ObjectInputStream {
                 throw new InvalidClassException(className, "Unauthorized deserialisation attempt");
             }
         }
-        if (!allowlistPattern.matcher(className).find()) {
+        if (!allowlistPattern.matcher(className).matches()) {
             Debug.logWarning("***Incompatible class***: " + className
                     + ". Please see OFBIZ-10837.  Report to dev ML if you use OFBiz without changes. "
                     + "Else follow https://s.apache.org/45war",

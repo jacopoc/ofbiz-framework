@@ -338,11 +338,11 @@ public class UtilObjectTests {
     // Test reading a valid customized list of string object.
     @Test
     public void testGetObjectExceptionCustomized() throws IOException, ClassNotFoundException {
-        UtilProperties.setPropertyValueInMemory("SafeObjectInputStream", "allowList", "java.util.Arrays.ArrayList,java.lang.String");
+        UtilProperties.setPropertyValueInMemory("SafeObjectInputStream", "allowList", "java.util.Arrays.ArrayList,java.lang.String,\\[L.*");
         testGetObjectExceptionSafe();
 
         // With extra whitespace
-        UtilProperties.setPropertyValueInMemory("SafeObjectInputStream", "allowList", "java.util.Arrays.ArrayList, java.lang.String");
+        UtilProperties.setPropertyValueInMemory("SafeObjectInputStream", "allowList", "java.util.Arrays.ArrayList, java.lang.String, \\[L.*");
         testGetObjectExceptionSafe();
     }
 
