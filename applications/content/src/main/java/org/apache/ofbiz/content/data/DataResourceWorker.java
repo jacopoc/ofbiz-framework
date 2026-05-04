@@ -1238,6 +1238,10 @@ public class DataResourceWorker implements org.apache.ofbiz.widget.content.DataR
                 UtilIO.copy(in, out);
             }
         } else if ("CONTEXT_FILE".equals(dataResourceTypeId) && UtilValidate.isNotEmpty(objectInfo)) {
+            Path normalizedInfo = Path.of(objectInfo).normalize();
+            if (normalizedInfo.isAbsolute() || normalizedInfo.startsWith("..")) {
+                throw new GeneralException("Invalid objectInfo path: " + objectInfo);
+            }            
             String prefix = rootDir;
             String sep = "";
             if (objectInfo.indexOf('/') != 0 && prefix.lastIndexOf('/') != (prefix.length() - 1)) {
