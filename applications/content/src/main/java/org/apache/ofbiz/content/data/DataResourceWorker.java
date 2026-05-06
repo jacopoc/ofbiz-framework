@@ -1060,6 +1060,9 @@ public class DataResourceWorker implements org.apache.ofbiz.widget.content.DataR
         if (UtilValidate.isEmpty(rootDir)) {
             rootDir = (String) context.get("rootDir");
         }
+        if (UtilValidate.isNotEmpty(rootDir)) {
+            rootDir = Path.of(rootDir).toAbsolutePath().normalize().toString();
+        }
 
         String dataResourceId = dataResource.getString("dataResourceId");
         String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
@@ -1238,10 +1241,12 @@ public class DataResourceWorker implements org.apache.ofbiz.widget.content.DataR
                 UtilIO.copy(in, out);
             }
         } else if ("CONTEXT_FILE".equals(dataResourceTypeId) && UtilValidate.isNotEmpty(objectInfo)) {
+            /*
             Path normalizedInfo = Path.of(objectInfo).normalize();
             if (normalizedInfo.isAbsolute() || normalizedInfo.startsWith("..")) {
                 throw new GeneralException("Invalid objectInfo path: " + objectInfo);
             }
+            */
             String prefix = rootDir;
             String sep = "";
             if (objectInfo.indexOf('/') != 0 && prefix.lastIndexOf('/') != (prefix.length() - 1)) {
