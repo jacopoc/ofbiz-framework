@@ -115,25 +115,16 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     private void executeMacro(Appendable writer, String macroName, Map<String, Object> parameters) throws IOException {
-        StringBuilder sb = new StringBuilder("<@");
-        sb.append(macroName);
-        if (parameters != null) {
-            for (Map.Entry<String, Object> parameter : parameters.entrySet()) {
-                sb.append(' ');
-                sb.append(parameter.getKey());
-                sb.append("=");
-                Object value = parameter.getValue();
-                if (value instanceof String) {
-                    sb.append('"');
-                    sb.append(((String) value).replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$"));
-                    sb.append('"');
-                } else {
-                    sb.append(value);
-                }
+        try {
+            if (UtilValidate.isEmpty(macroName) || !macroName.matches("[A-Za-z0-9_]+")) {
+                Debug.logError("Invalid macro name [" + macroName + "]", MODULE);
+                return;
             }
+            Environment environment = getEnvironment(writer);
+            environment.invokeMacro(macroName, parameters, null, null);
+        } catch (TemplateException | IOException e) {
+            Debug.logError(e, "Error rendering screen macro [" + macroName + "] thru ftl", MODULE);
         }
-        sb.append(" />");
-        executeMacro(writer, sb.toString());
     }
 
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
