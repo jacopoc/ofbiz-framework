@@ -394,6 +394,7 @@ public final class UtilXml {
             Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", MODULE);
             return null;
         }
+        validateXmlReadUrl(url);
 
         URLConnection connection = url.openConnection();
         // OFBIZ-12118: Ensure caching is disabled otherwise we may find another thread has already closed the
@@ -406,33 +407,64 @@ public final class UtilXml {
 
     public static Document readXmlDocument(URL url, boolean validate, boolean withPosition)
             throws SAXException, ParserConfigurationException, java.io.IOException {
+        if (url == null) {
+            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", MODULE);
+            return null;
+        }
+        validateXmlReadUrl(url);
 
-        // For jar: URLs (e.g. jar:http://host/file.jar!/entry), getHost() returns empty string
-        // because the host belongs to the inner URL, not the jar: wrapper. Extract it explicitly.
+        URLConnection connection = url.openConnection();
+        connection.setUseCaches(false);
+        try (InputStream is = connection.getInputStream()) {
+            return readXmlDocument(is, validate, url.toString(), withPosition);
+        }
+    }
+
+    private static void validateXmlReadUrl(URL url) throws IOException {
+        String protocol = url.getProtocol();
+        if (protocol == null) {
+            throw new IOException("Could not parse protocol for XML URL: " + url);
+        }
+        String normalizedProtocol = protocol.toLowerCase(java.util.Locale.ROOT);
+        if (!"file".equals(normalizedProtocol) && !"jar".equals(normalizedProtocol) && !"classpath".equals(normalizedProtocol)) {
+            throw new IOException("Reading XML from URL protocol [" + protocol + "] is not allowed: " + url);
+        }
+        if (UtilValidate.isEmpty(protocol)) {
+            throw new IOException("URL protocol is empty: " + url);
+        }
+
+        if ("file".equals(protocol) || "classpath".equals(protocol) || "component".equals(protocol)
+                || "ofbizhome".equals(protocol)) {
+            return;
+        }
+
         String urlHost = url.getHost();
-        if (urlHost.isEmpty() && "jar".equals(url.getProtocol())) {
+        if ("jar".equals(protocol)) {
             String innerUrlStr = url.toString().substring("jar:".length());
             int bangIdx = innerUrlStr.indexOf('!');
             if (bangIdx >= 0) {
                 innerUrlStr = innerUrlStr.substring(0, bangIdx);
             }
             try {
-                urlHost = new URL(innerUrlStr).getHost();
+                URL innerUrl = new URL(innerUrlStr);
+                String innerProtocol = innerUrl.getProtocol();
+                if ("file".equals(innerProtocol)) {
+                    return;
+                }
+                urlHost = innerUrl.getHost();
             } catch (java.net.MalformedURLException e) {
                 throw new IOException("Cannot determine host from jar URL: " + url);
             }
+        } else if (!"http".equals(protocol) && !"https".equals(protocol) && !"ftp".equals(protocol)) {
+            throw new IOException("URL protocol " + protocol + " is not accepted for XML read: " + url);
         }
-        // urlHost is empty for local URLs (e.g. file:), which are always allowed
-        if (!HOSTHEADERSALLOWED.contains(urlHost) && !urlHost.isEmpty()) {
+
+        if (UtilValidate.isEmpty(urlHost) || !HOSTHEADERSALLOWED.contains(urlHost)) {
             Debug.logWarning("Domain " + urlHost + " not accepted to prevent host header injection."
                     + " You need to set host-headers-allowed property in security.properties file.", MODULE);
             throw new IOException("Domain " + urlHost + " not accepted to prevent host header injection."
                     + " You need to set host-headers-allowed property in security.properties file.");
         }
-        InputStream is = url.openStream();
-        Document document = readXmlDocument(is, validate, url.toString(), withPosition);
-        is.close();
-        return document;
     }
 
     public static Document readXmlDocument(InputStream is, String docDescription)
