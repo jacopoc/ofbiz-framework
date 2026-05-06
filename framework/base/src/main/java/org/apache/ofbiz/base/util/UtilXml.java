@@ -422,6 +422,13 @@ public final class UtilXml {
 
     private static void validateXmlReadUrl(URL url) throws IOException {
         String protocol = url.getProtocol();
+        if (protocol == null) {
+            throw new IOException("Could not parse protocol for XML URL: " + url);
+        }
+        String normalizedProtocol = protocol.toLowerCase(java.util.Locale.ROOT);
+        if (!"file".equals(normalizedProtocol) && !"jar".equals(normalizedProtocol) && !"classpath".equals(normalizedProtocol)) {
+            throw new IOException("Reading XML from URL protocol [" + protocol + "] is not allowed: " + url);
+        }
         if (UtilValidate.isEmpty(protocol)) {
             throw new IOException("URL protocol is empty: " + url);
         }
