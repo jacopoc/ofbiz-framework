@@ -190,6 +190,8 @@ public class ModelTree extends ModelWidget {
                 expColReq = s1;
             }
         }
+        expColReq = StringUtil.replaceString(expColReq, "${", "");
+        expColReq = StringUtil.replaceString(expColReq, "}", "");
         //append also the request parameters
         Map<String, Object> paramMap = UtilGenerics.cast(context.get("requestParameters"));
         if (UtilValidate.isNotEmpty(paramMap)) {
