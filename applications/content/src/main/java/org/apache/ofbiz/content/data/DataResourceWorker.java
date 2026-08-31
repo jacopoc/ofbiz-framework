@@ -1239,16 +1239,20 @@ public class DataResourceWorker implements org.apache.ofbiz.widget.content.DataR
             }
         } else if ("CONTEXT_FILE".equals(dataResourceTypeId) && UtilValidate.isNotEmpty(objectInfo)) {
             String prefix = rootDir;
-            String sep = "";
-            if (objectInfo.indexOf('/') != 0 && prefix.lastIndexOf('/') != (prefix.length() - 1)) {
-                sep = "/";
+            File file = new File(prefix, objectInfo);
+            File canonicalRoot = new File(prefix).getCanonicalFile();
+            File canonicalFile = file.getCanonicalFile();
+            String canonicalRootPath = canonicalRoot.getPath();
+            String canonicalFilePath = canonicalFile.getPath();
+            if (!canonicalFilePath.equals(canonicalRootPath)
+                    && !canonicalFilePath.startsWith(canonicalRootPath + File.separator)) {
+                throw new GeneralException("File (" + objectInfo + ") is outside of the context root");
             }
-            File file = FileUtil.getFile(prefix + sep + objectInfo);
-            checkContextFileBoundary(file, rootDir);
-            if (!file.exists()) {
-                throw new FileNotFoundException("No file found: " + file.getAbsolutePath());
+            checkContextFileBoundary(canonicalFile, rootDir);
+            if (!canonicalFile.exists()) {
+                throw new FileNotFoundException("No file found: " + canonicalFile.getAbsolutePath());
             }
-            try (InputStreamReader in = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+            try (InputStreamReader in = new InputStreamReader(new FileInputStream(canonicalFile), StandardCharsets.UTF_8)) {
                 if (Debug.infoOn()) {
                     String enc = in.getEncoding();
                     Debug.logInfo("in serveImage, encoding:" + enc, MODULE);
